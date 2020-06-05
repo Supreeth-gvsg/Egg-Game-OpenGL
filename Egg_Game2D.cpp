@@ -11,8 +11,6 @@ using namespace std;
 #define max 12
 #define Pi 3.14159265359
 
-//0.70 is diff
-//<0.25,edit
 bool flag=false,movedown=false,night=false,play=false,gameover=false;
 GLfloat basket1x=0.01,basket1y=0.100,basket2x=0.5,basket2y=0.450,basket3x=0.91,basket3y=0.800;
 GLfloat speed1=0.002,speed2=0.002,speed3=0.002;
@@ -24,7 +22,7 @@ GLdouble width=1000,height=1000;
 int points=0,life=max,prevlife=max,below=1,above=3;
 int circlex=0.100,circley=0.800,radius=0.080,dn=0;
 
-void init()
+void init()  // Function to initialize the background color and to load isentity matrix into projection matrix.
 {
 	glClearColor(0,0,0,1);
 	glMatrixMode(GL_PROJECTION);
@@ -32,7 +30,7 @@ void init()
 	glOrtho(0,1,0,1,-1,1);
 }
 
-void addtobasket(int b)
+void addtobasket(int b)   //Function to add egg to a specific basket.
 {
     if(b==1)
     {
@@ -51,7 +49,7 @@ void addtobasket(int b)
     }
 }
 
-void background()
+void background()   //Function change the background(Day/Night) dynamically with respect to  score.
 {
     if(points%2==0 && dn%2==0)
     {
@@ -60,17 +58,7 @@ void background()
 	    dn++;
  	    glClearColor(0,0,0,1);
 	    glColor3f(1,1,0);
-	    //float theta;
-	    //GLfloat angle;
-	    //glLineWidth(1.5);
 	    night=true;
-	   // glBegin(GL_POLYGON);
-		//for (int i = 0; i <360 ; i++)
-		//{
-		 //   theta  = i*Pi*i/180;
-		  //  glVertex3f(0.500+0.080*cos(theta)/2, 0.600+0.080*sin(theta)/2,-0.5);
-		//}
-	    //glEnd();
 	}
     }
     if(points%4==0 && dn%2==1)
@@ -85,9 +73,10 @@ void background()
     }
 }
 
-void decrement()
+void decrement()   //When egg reach topmost basket, this function moves topmost basket to bottom-most position 
 {
-    basket1y-=0.01;
+    //Reducing the height of each basket and egg to move them down
+    basket1y-=0.01; 
     basket2y-=0.01;
     basket3y-=0.01;
     eggy-=0.01;
@@ -121,6 +110,8 @@ void decrement()
 	below=3;
 	above=2;
     }
+    // If any other basket other than topmost one containing egg moves down off the viewport, then basket is 
+    //pushed to topmost position
     if(basket1y<-0.24)
 	basket1y=0.8;
     if(basket2y<-0.24)
@@ -129,7 +120,7 @@ void decrement()
 	basket3y=0.8;
 }
 
-void displaylife()
+void displaylife()  //Function to display chances left
 {
     glColor3f(0,1,0);
     char data[6]={'L','I','F','E',' ',':'};
@@ -146,7 +137,7 @@ void displaylife()
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,val[i]);
 }
 
-void displayscore()
+void displayscore()   //Function to display current score
 {
     glColor3f(0,1,0);
     glRasterPos3f(0.870,0.950,-0.7);
@@ -163,7 +154,7 @@ void displayscore()
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,val[i]);
 }
 
-void displaymenu()
+void displaymenu()    //Funciton to siaply instructions at top of screen
 {
     glColor3f(0,1,0);
     glRasterPos3f(0.38,0.970,-0.7);
@@ -184,7 +175,7 @@ void displaymenu()
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15,data3[i]);
 }
 
-void drawbasket(GLfloat i,GLfloat j)
+void drawbasket(GLfloat i,GLfloat j)  //Function to draw basket
 {
     glColor3ub(165,42,42);
     glBegin(GL_POLYGON);
@@ -196,7 +187,7 @@ void drawbasket(GLfloat i,GLfloat j)
 
 }
 
-void ellipse(float x, float y, float a, float b) {
+void ellipse(float x, float y, float a, float b) { //Function to draw egg
 	glPointSize(1.0);
 	glBegin(GL_TRIANGLE_FAN);
 	glClearColor(0.0, 0.0,0.0,0.0);
@@ -208,7 +199,7 @@ void ellipse(float x, float y, float a, float b) {
 	glEnd();
 }
 
-void key(unsigned char k,int x,int y)
+void key(unsigned char k,int x,int y)  //Function to inrteract with keyboard inputs
 {
 	if(k=='p'||k=='P'){
 	    play=!play;
@@ -236,7 +227,7 @@ void key(unsigned char k,int x,int y)
 	}
 }
 
-void reshape(int w,int h)	
+void reshape(int w,int h)	//Function to change game's viewport whenever screen is resized
 {
 	width=(GLdouble)w;
 	height=(GLdouble)h;
@@ -246,8 +237,8 @@ void reshape(int w,int h)
         glOrtho(0, 1, 0, 1, -1, 1);
 }
 
-void display()
-{
+void display() //Function for displaying the content
+ {
     
 	   if(start_game==0)
 	   {
@@ -337,7 +328,8 @@ void display()
 	   }
 	    else{
 		if(play&&!gameover) {
-	    glEnable(GL_DEPTH_TEST);
+	//Enabling depth buffer test to deal with display of object places at different positions away from camera
+	    glEnable(GL_DEPTH_TEST);  
 	    background();
 	    if(night==false)
 		glClearColor(0,1,1,1);
@@ -353,7 +345,7 @@ void display()
 	    glLineWidth(1.5);
 	    glBegin(GL_POLYGON);
 		for (int i = 0; i <360 ; i++)
-		{
+		{ //Drawing Sun/Moon
 		    theta  = i*Pi*i/180;
 		    glVertex3f(0.100+0.080*cos(theta)/2, 0.800+0.080*sin(theta)/2,-0.5);
 		}
@@ -365,6 +357,7 @@ void display()
 		glVertex3f(1.000,0.900,-0.9);
 		glVertex3f(1.000,1.000,-0.9);
 	    glEnd();
+	   //Assigning movement to baskets with pre-defined speed.
 	    if((0.07+basket1x>=0.99&&speed1>0) || (basket1x<=0.01&&speed1<0))
 	    {
 		speed1=-speed1;
@@ -381,11 +374,13 @@ void display()
 		speed3=-speed3;
 	    }
 	    basket3x+=speed3;
+		//Drawing the baskets.
 	    drawbasket(basket1x,basket1y);
 	    drawbasket(basket2x,basket2y);
 	    drawbasket(basket3x,basket3y);
-	    if(movedown)
+	    if(movedown)   //If egg reaches topmost basket, calling decrement func. to move the baskets vertically.
 		decrement();
+		//controlling egg's verical and horizontal movements.
 	    if(currentbasket==1)
 	    {
 		eggx=basket1x+0.035;
@@ -413,6 +408,7 @@ void display()
 		    velocity-=g;
 		}
 	    }
+		//Editing cahnces left and current score on pressing space bar
 	    if(flag)
 	    {
 		if(velocity<0&&(eggx>=(basket1x+0.01))&&eggx<=(basket1x+0.05)&&eggy>=(basket1y+0.01)&&eggy<=(basket1y+0.04))
@@ -464,7 +460,7 @@ void display()
 			addtobasket(below);
 		}
 	    }
-	    ellipse(eggx,eggy,eggrx,eggry);
+	    ellipse(eggx,eggy,eggrx,eggry); //Redrawing egg with new coordinates as it's centre
 	    displaylife();
 	    displayscore();
 	    displaymenu();
@@ -476,7 +472,7 @@ void display()
 	    glutPostRedisplay();
 	}
     }
-if(gameover)
+if(gameover) //Displaying gameover screen when there are no chances left to play
 {
     glClearColor(0,0,0,1);
     play=false;
@@ -513,12 +509,12 @@ if(gameover)
 }
 
 }
-void idle()
+void idle()  //Redisplaying screen when user remains idle
 {
    glutPostRedisplay();
 }
 
-void menu(int opt)
+void menu(int opt)  //Function to process suitable action after selecting an option from menu 
 {
     switch(opt) {
 	case 1: play=!play;
@@ -546,18 +542,18 @@ void menu(int opt)
 int main(int argc,char **argv)
 {
     glutInit(&argc,argv);
-    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
-    glutInitWindowSize(width,height);
-    glutCreateWindow("GAME");
+    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH); //Initializing Buffers
+    glutInitWindowSize(width,height); //Setting up window size
+    glutCreateWindow("GAME");   //Seting up title of the window
     init();
-    glutDisplayFunc(display);
+    glutDisplayFunc(display); //Providing je callback function name for displaying contents on screen
     glutIdleFunc(idle);
     glutKeyboardFunc(key);
     glutReshapeFunc(reshape);
-    glutCreateMenu(menu);
+    glutCreateMenu(menu);  //Adding Menu for the game
 	glutAddMenuEntry("Play / Pause",1);
 	glutAddMenuEntry("Quit",2);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);   //Asking to activate menu on right click
     glutMainLoop();
     return 0;
 }
