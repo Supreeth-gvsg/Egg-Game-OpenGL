@@ -12,6 +12,7 @@ Start the game using following command:
 
 ./game.out
 
-![In Game ScreenShot - 01](https://raw.github.com/Supreeth-gvsg/Egg-Game-OpenGL/master/Ingame_screenshot_1.jpeg = 100X100)
-
+<img src = "https://raw.github.com/Supreeth-gvsg/Egg-Game-OpenGL/master/Ingame_screenshot_1.jpeg" style = "width:100px;height = "100px" />
+<img src = "https://raw.github.com/Supreeth-gvsg/Egg-Game-OpenGL/master/Ingame_screenshot_2.jpeg" style = "width:100px;height = "100px" />
+<img src = "https://raw.github.com/Supreeth-gvsg/Egg-Game-OpenGL/master/Ingame_screenshot_3.jpeg" style = "width:100px;height = "100px" />
 
